@@ -1,0 +1,34 @@
+name: Deploy PHP Web to Debian
+
+on:
+  push:
+    branches:
+      - main  
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to Debian Server
+        run: |
+          ssh -o StrictHostKeyChecking=no \
+          ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+          
+          cd /var/www/web1
+          git pull origin main
+          
+          sudo chown -R www-data:www-data /var/www/web1
+          sudo find /var/www/web1 -type d -exec chmod 755 {} \;
+          sudo find /var/www/web1 -type f -exec chmod 644 {} \;
+          
+          sudo systemctl reload nginx
+          EOF
