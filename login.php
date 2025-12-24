@@ -53,7 +53,7 @@
           <div class="card-body login-card-body border-login">
             <br/>
             <div class="login-logo">
-              <b class="color">Laundry Maru Ruru</b>
+              <b class="color">Laundry MJS</b>
             </div>  
             <p class="login-box-msg">Sign in to start your session</p>
             <form action="proses/login-proses.php" method="post" autocomplete="off">
