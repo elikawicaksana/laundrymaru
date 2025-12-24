@@ -1,4 +1,4 @@
-name: Deploy PHP Web to Debian
+name: Deploy Website to Debian
 
 on:
   push:
