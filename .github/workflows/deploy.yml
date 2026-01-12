@@ -1,32 +1,25 @@
-name: Deploy PHP App to Debian
+name: Deploy PHP App
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.9.0
+      - name: Deploy to VM
+        uses: appleboy/ssh-action@v1
         with:
-          ssh-private-key: |
-            ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Deploy to Debian Server
-        run: |
-          set -e
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-          set -e
-          cd /var/www/web1
-          echo "BEFORE: $(git rev-parse --short HEAD)"
-          git fetch origin main
-          git reset --hard origin/main
-          echo "AFTER:  $(git rev-parse --short HEAD)"
-          sudo systemctl reload nginx
-          EOF
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 2121
+          script: |
+            set -e
+            cd /var/www/web1
+            git fetch origin main
+            git reset --hard origin/main
