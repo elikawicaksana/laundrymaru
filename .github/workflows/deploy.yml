@@ -20,6 +20,6 @@ jobs:
           port: 2121
           script: |
             set -e
-            cd /var/www/web1
+            cd /var/www/laundry
             git fetch origin main
             git reset --hard origin/main
